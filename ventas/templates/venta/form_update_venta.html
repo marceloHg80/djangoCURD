@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+<!---->
+{% block title %}Actualizar Datos de Venta{% endblock %}
+<!---->
+{%block content %}
+{% load static %}
+
+<div class="row justify-content-center">
+  <div class="col-md-12 mb-2">
+    <h1 class="text-center text-uppercase">
+      <a style="float: left" href="{% url 'inicio' %}">
+        <span><i class="bi bi-arrow-left-circle"></i></span>
+      </a>
+      Datos de Venta
+      <hr />
+    </h1>
+  </div>
+</div>
+
+<div class="row justify-content-md-center">
+  <form
+    name="form_venta"
+    method="POST"
+    action="{% url 'actualizar_venta' venta.id %}"
+    class="row justify-content-md-center g-3"
+    enctype="multipart/form-data">
+
+    {% csrf_token %}
+    <div class="col-md-5">
+      <label for="producto" class="form-label">
+        Nombre del Producto
+      </label>
+      <input
+        type="text"
+        name="producto"
+        value="{{ venta.producto }}"
+        class="form-control"
+        required />
+    </div>
+    <div class="col-md-5">
+      <label for="cantidad" class="form-label">
+        cantidad
+      </label>
+      <input
+        type="text"
+        name="cantidad"
+        value="{{ venta.cantidad }}"
+        class="form-control"
+        required />
+    </div>
+    <div class="col-md-5">
+      <label for="precio_unitario" class="form-label">
+        Precio
+      </label>
+      <input
+        type="text"
+        name="precio_unitario"
+        value="{{ venta.precio_unitario }}"
+        class="form-control"
+        required />
+    </div>
+    <div class="col-md-5">
+      <label for="fecha_venta" class="form-label">
+        fecha_venta
+      </label>
+      <input
+        class="form-control"
+        required 
+        type="date" name="fecha_venta" value="{{ venta.fecha_venta|date:'Y-m-d' }}"/>
+    </div>
+    <div class="col-md-5">
+      <label for="cliente" class="form-label">
+        cliente
+      </label>
+      <input
+        type="text"
+        name="cliente"
+        value="{{ venta.cliente }}"
+        class="form-control"
+        required />
+    </div>
+
+    <div class="d-grid gap-2 col-8 mx-auto mt-5">
+      <button class="btn btn-primary" type="submit">
+        Actualizar Datos de la Venta
+      </button>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

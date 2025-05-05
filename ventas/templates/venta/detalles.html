@@ -1,0 +1,48 @@
+{% extends '../base.html' %}
+<!---->
+{% block title %}Detalles de Venta{% endblock %}
+<!---->
+{% load static %}
+<!---->
+{% block content %}
+
+<div class="row justify-content-md-center">
+  <a
+    title="volver"
+    style="float: left; font-size: 25px"
+    href="{% url 'listar_ventas' %}">
+    <span><i class="bi bi-arrow-left-circle"></i></span>
+  </a>
+  <div class="col-md-5 mb-2">
+    <div class="card shadow">
+      <div class="card-body">
+        <p class="card-title">
+          <strong>Producto:</strong> {{ venta.producto }}
+        </p>
+        <p class="card-text buttom mb-3">
+          <strong>Cantidad: </strong>
+          {{ venta.cantidad }}
+        </p>
+        <p class="card-text buttom mb-3">
+          <strong>precio:</strong> {{ venta.precio_unitario }}
+        </p>
+        <p class="card-text buttom mb-3">
+          <strong> fecha_venta:</strong> {{ venta.fecha_venta }}
+        </p>
+        <p class="card-text buttom mb-3">
+          <strong>cliente:</strong> {{ venta.cliente }}
+        </p>
+        <p class="card-text buttom mb-3">
+          <strong>total:</strong> {{ venta.precio_unitario * venta.cantidad }}
+        </p>
+
+        <hr />
+
+        <a class="mt-5" href="{% url 'listar_ventas' %}">
+          <i class="bi bi-arrow-left-circle"> Volver</i>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

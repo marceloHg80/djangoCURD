@@ -1,0 +1,241 @@
+{% extends 'base.html' %}
+<!---->
+{% block title %}Registrar Venta{% endblock %}
+<!---->
+{%block content %} {% load static %}
+
+<div class="row justify-content-center">
+  <div class="col-md-12 mb-2">
+    <h2 class="text-center text-uppercase">
+      <a
+        style="color: #14ad47; float: left; padding: 0px 10px 0px 0px"
+        href="{% url 'registrar_venta' %}">
+        <span><i class="bi bi-arrow-left-circle"></i></span>
+      </a>
+      Lista de Ventas
+      <a
+        style="color: #14ad47; float: right; padding: 0px 10px 0px 0px"
+        href="{% url 'informe_venta' %}"
+        title="Descargar Data de Ventas"
+        download="Informe">
+        <i class="bi bi-file-earmark-spreadsheet-fill"></i>
+      </a>
+      <hr />
+    </h2>
+  </div>
+</div>
+
+<!-- Gráfico de puntos -->
+<div class="row mt-4">
+  <div class="col-md-12">
+      <div class="card shadow">
+          <div class="card-header bg-success text-white">
+              <h5 class="card-title mb-0">
+                  <i class="bi bi-graph-up me-2"></i>
+                  Evolución de Ganancias Diarias
+              </h5>
+          </div>
+          <div class="card-body">
+              <canvas id="scatterChart" style="height: 400px;"></canvas>
+          </div>
+      </div>
+  </div>
+</div>
+
+{% if ventas %}
+<div class="table-responsive">
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>Producto</th>
+        <th>Cantidad</th>
+        <th>Precio</th>
+        <th>Fecha</th>
+        <th>Cliente</th>
+        <th>TOTAL</th>
+        <th class="text-center">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for venta in ventas %}
+      <tr id="venta_{{ venta.id }}">
+        <td>{{ venta.producto }}</td>
+        <td>{{ venta.cantidad }}</td>
+        <td>{{ venta.precio_unitario }}</td>
+        <td>{{ venta.fecha_venta }}</td>
+        <td>{{ venta.cliente }}</td>
+        <td>{{ venta.total }}</td>
+        <td>
+          <span style="display: flex; justify-content: space-between">
+            <a
+              class="btn btn-success success_especial"
+              title="Editar datos del Venta"
+              href="{% url 'view_form_update_venta' venta.id %}">
+              <i class="bi bi-pencil-square"></i>
+            </a>
+
+            {% csrf_token %}
+            <button
+              class="btn btn-warning warning_especial"
+              title="Eliminar Venta"
+              onclick="borrarVenta('{{ venta.id }}')">
+              <i class="bi bi-trash"></i>
+            </button>
+          </span>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<p class="text-center">No hay ventas registrados 😭.</p>
+{% endif %} {% endblock %}
+<!---->
+{% block customJS %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('scatterChart');
+    const puntos = {{ puntos_grafico|safe }};
+
+    new Chart(ctx, {
+        type: 'scatter',
+        data: {
+            datasets: [{
+                label: 'Ganancia del día',
+                data: puntos,
+                backgroundColor: 'rgba(20, 173, 71, 0.7)',
+                borderColor: 'rgba(14, 115, 47, 1)',
+                pointRadius: 6,
+                pointHoverRadius: 8,
+                pointHitRadius: 10
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    type: 'time',
+                    time: {
+                        unit: 'day',
+                        tooltipFormat: 'dd MMM yyyy',
+                        displayFormats: {
+                            day: 'dd MMM'
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Fecha',
+                        color: '#666',
+                        font: {
+                            size: 14,
+                            weight: 'bold'
+                        }
+                    },
+                    grid: {
+                        color: 'rgba(0,0,0,0.05)'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Ganancia Total ($)',
+                        color: '#666',
+                        font: {
+                            size: 14,
+                            weight: 'bold'
+                        }
+                    },
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(0,0,0,0.05)'
+                    },
+                    ticks: {
+                        callback: function(value) {
+                            return '$' + value.toLocaleString();
+                        }
+                    }
+                }
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        title: function(context) {
+                            return 'Fecha: ' + context[0].raw.x;
+                        },
+                        label: function(context) {
+                            return 'Ganancia: $' + context.raw.y.toLocaleString();
+                        }
+                    }
+                }
+            }
+        }
+    });
+});
+
+  async function borrarVenta(idVenta) {
+    var confirmation = confirm(
+      "¿Estas seguro que deseas eliminar el venta?"
+    );
+
+    if (confirmation) {
+      try {
+        let li = document.querySelector("#venta_" + idVenta);
+
+        let csrfToken = "{{ csrf_token|escapejs }}";
+
+        // Realiza la solicitud POST utilizando Axios
+        const response = await axios({
+          method: "post",
+          url: "/eliminar-venta/",
+          data: { idVenta },
+          headers: {
+            "X-CSRFToken": csrfToken,
+          },
+        });
+
+        console.log(response.data);
+        console.log(response.data.resultado);
+        if (response.data.resultado === 1) {
+          alerta("El venta fue eliminado correctamente 😏", 1);
+          li.remove();
+        } else {
+          console.log("Error al intentar borrar el venta");
+        }
+      } catch (error) {
+        console.error("Error al realizar la solicitud:", error);
+      }
+    }
+  }
+
+  function alerta(msj, tipo_msj) {
+    const divExistente = document.querySelector(".alert");
+    if (divExistente) {
+      divExistente.remove();
+    }
+
+    // Crear un nuevo div para la alerta
+    const divRespuesta = document.createElement("div");
+    divRespuesta.classList.add("col-md-11");
+
+    divRespuesta.innerHTML = `
+      <div class="alert ${
+        tipo_msj == 1 ? "alert-success" : "alert-danger"
+      }  alert-dismissible text-center" role="alert">
+        ${msj}
+      </div>
+  `;
+
+    setTimeout(function () {
+      divRespuesta.innerHTML = "";
+    }, 8000);
+
+    const container = document.querySelector(".row");
+    container.insertAdjacentElement("beforeend", divRespuesta);
+  }
+</script>
+{% endblock %}

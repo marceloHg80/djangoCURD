@@ -1,0 +1,79 @@
+body {
+  background-color: #def0ed !important;
+}
+hr {
+  color: #09c046 !important;
+}
+.form-check-input:checked {
+  background-color: #09c046 !important;
+  border-color: #09c046 !important;
+}
+.btn-primary {
+  background-color: #09c046 !important;
+  border: #09c046 !important;
+}
+.btn-primary:hover {
+  opacity: 0.9;
+}
+form {
+  padding: 0px 50px !important;
+}
+table {
+  width: 98% !important;
+  margin: 0 auto !important;
+}
+#bottomRightButton {
+  position: fixed;
+  bottom: 20px; /* Espacio desde el borde inferior */
+  right: 20px; /* Espacio desde el borde derecho */
+  padding: 10px 20px;
+  background-color: #09c046;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.bi-arrow-left-circle {
+  padding: 0px 40px;
+  color: #09c046;
+}
+.bi-arrow-left-circle:hover {
+  color: #14ad47;
+  cursor: pointer;
+}
+a {
+  text-decoration: none;
+}
+.foto_empleado {
+  border-radius: 5px;
+  display: flex;
+  margin: 0 auto;
+}
+
+.bi-trash,
+.bi-person-bounding-box,
+.bi-pencil-square {
+  font-size: 20px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.buttom {
+  border-bottom: 1px solid #eee;
+}
+.shadow {
+  border: none;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px !important;
+}
+.success_especial {
+  background-color: #2bbd5c !important;
+  border: 1px solid #2bbd5c !important;
+}
+.success_especial:hover {
+  color: #333 !important;
+}
+.warning_especial:hover {
+  color: red !important;
+}
+.info_especial:hover {
+  color: #fff !important;
+}

@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+<!---->
+{% block title %}Registrar Venta{% endblock %}
+<!---->
+{%block content %}
+
+<div class="row justify-content-center">
+  <div class="col-md-12 mb-2">
+    <h1 class="text-center text-uppercase">
+      Datos de Venta
+      <a
+        style="color: #14ad47; float: right; padding: 0px 10px 0px 0px"
+        href="{% url 'view_form_carga_masiva' %}">
+        <i class="bi bi-person-fill-up"></i>
+      </a>
+      <hr />
+    </h1>
+  </div>
+</div>
+
+<div class="row justify-content-md-center">
+  <form
+    name="form_venta"
+    method="POST"
+    action="{% url 'registrar_venta' %}"
+    class="row justify-content-md-center g-3"
+    enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="col-md-5">
+      <label for="producto" class="form-label">
+        producto
+      </label>
+      <input type="text" name="producto" class="form-control" required />
+    </div>
+    <div class="col-md-5">
+      <label for="cliente" class="form-label">
+        cliente
+      </label>
+      <input type="text" name="cliente" class="form-control" required />
+    </div>
+    <div class="col-md-3">
+      <label for="cantidad" class="form-label">
+        cantidad
+      </label>
+      <input
+        type="text"
+        name="cantidad"
+        class="form-control"
+        required />
+    </div>
+    <div class="col-md-3">
+      <label for="precio_unitario" class="form-label">
+        precio_unitario
+      </label>
+      <input type="text" name="precio_unitario" class="form-control" required />
+    </div>
+    <div class="col-md-3">
+      <label for="fecha_venta" class="form-label">
+        fecha_venta
+      </label>
+      <input type="date" name="fecha_venta" class="form-control" required />
+    </div>
+    
+
+    <div class="d-grid gap-2 col-8 mx-auto mt-5">
+      <button class="btn btn-primary" type="submit">
+        Registrar Venta
+        <i class="bi bi-arrow-clockwise"></i>
+      </button>
+    </div>
+  </form>
+</div>
+{% endblock %}
